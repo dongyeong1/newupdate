@@ -5,6 +5,10 @@ import { Card } from "antd";
 import { Doughnut } from "react-chartjs-2";
 
 const Pie = ({ userRate }) => {
+
+  const userRateRidding=userRate.R?userRate.R:0
+  const userRateRunning=userRate.B?userRate.B:0
+
   const options = {
     plugins: {
       legend: {
@@ -21,7 +25,7 @@ const Pie = ({ userRate }) => {
     datasets: [
       {
         label: ["러닝", "달리기"],
-        data: [userRate.R, userRate.B],
+        data: [userRateRidding, userRateRunning],
         backgroundColor: ["#0288D1", "#BBDEFB"],
       },
     ],

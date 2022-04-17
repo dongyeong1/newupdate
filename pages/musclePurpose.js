@@ -1,11 +1,21 @@
-import React, { useState } from "react";
-import { Calendar, Card, Alert } from "antd";
+import React, { useEffect, useState } from "react";
+import { Calendar, Card, Alert,Button,Modal } from "antd";
 import { moment } from "moment";
 import styled from "styled-components";
 import axios from "axios";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { ALL_GOAL_REQUEST, LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
+import Purpose from "./purposeModal";
+import { useSelector } from "react-redux";
+
+import FullCalendar from "@fullcalendar/react";
+import interactionPlugin from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import dayGridPlugin from '@fullcalendar/daygrid'
+import { useRef } from "react";
+import Information from './purposeInformation'
+
 
 // const [value, setValue] = useState(moment().format("2022-01-01"));
 
@@ -22,11 +32,92 @@ function onPanelChange(value, mode) {
 }
 
 const musclePurpose = () => {
+
+  const {goalpurpose,allPurpose}=useSelector((state)=>state.user)
+  
+
+
+  const calendarRef = useRef(null);
+
+  // const [calendarEvent,setCalendarEvent]=useState([])
+  const calendarEvent=[]
+  if(allPurpose){
+    for(var i=0; i<allPurpose.length; i++){
+      if(allPurpose[i].event=='B'){
+        var tdate=new Date(allPurpose[i].lastDate)
+        calendarEvent.push({id:allPurpose[i].id,title:allPurpose[i].title,start:allPurpose[i].firstDate,end:tdate,color:'#0000FF',textColor:allPurpose[i].goalDistance})
+      }else{
+        console.log('qqqqq',allPurpose[i].lastDate)
+        var tdate=new Date(allPurpose[i].lastDate)
+        console.log('dddddd',tdate)
+        calendarEvent.push({id:allPurpose[i].id,title:allPurpose[i].title,start:allPurpose[i].firstDate,end:tdate,color:'#008000',textColor:allPurpose[i].goalDistance})
+        // calendarEvent.push({id:allPurpose[i].id,title:allPurpose[i].title,start:allPurpose[i].firstDate,end:allPurpose[i].lastDate,color:'#008000',textColor:allPurpose[i].goalDistance})
+      }
+     
+      
+    }
+  }
+ 
+
+
+
+
+
+//   useEffect(()=>{
+//     console.log('asdasdsa')
+// Modal.destroyAll();
+//   },[goalpurpose])
+
+
+
+
+  const [isModal, setIsModal] = useState(false);
+
+  const showModal = () => {
+    setIsModal(true);
+  };
+
+  const openModal = () => {
+    setIsModal((prev) => !prev);
+    console.log(isModal);
+  };
+
+
+  const [information,setInformation]=useState({})
+  const [informationModal, setInformationModal] = useState(false);
+ 
+
+  const showInformationModal = () => {
+    setInformationModal(true);
+  };
+
+  const openInformationModal = () => {
+    setInformationModal((prev) => !prev);
+  };
+  const asd=(a)=>{
+    showInformationModal()
+    setInformation(a.event)
+    console.log(a)
+  }
+
   return (
     <Container>
+      <Button type="primary" onClick={showModal} ghost>
+            운동목표설정
+            </Button>
+            <Purpose isModal={isModal} openModal={openModal} setIsModal={setIsModal}/>
       <Title>나의 운동목표</Title>
       <Card>
-        <Calendar onPanelChange={onPanelChange} />
+        {/* <Calendar onPanelChange={onPanelChange} /> */}
+        <FullCalendar
+        eventClick={asd}
+        events={calendarEvent}
+      innerRef={calendarRef}
+      plugins={[dayGridPlugin]}
+      editable
+      selectable
+    />
+     <Information informationModal={informationModal} openInformationModal={openInformationModal} setInformationModal={setInformationModal} information={information}/>
       </Card>
     </Container>
   );
@@ -76,6 +167,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
     context.store.dispatch({
       type: LOAD_MY_INFO_REQUEST,
     });
+    context.store.dispatch({
+      type:ALL_GOAL_REQUEST
+    })
 
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();

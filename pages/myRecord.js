@@ -11,7 +11,7 @@ import { Card, Button, Table, Select, Modal, Row, Col } from "antd";
 import styled from "styled-components";
 const { Column } = Table;
 import moment from "moment";
-import { DELETE_MYPOST_REQUEST,LOAD_LOGIN_REQUEST } from "../reducers/user";
+import { DELETE_MYPOST_REQUEST, LOAD_LOGIN_REQUEST } from "../reducers/user";
 const { Option } = Select;
 
 function myRecord() {
@@ -19,7 +19,7 @@ function myRecord() {
     let date = moment(d);
     return date.format("YYYY년 MM월 DD일");
   };
-  const [gpsId,setGpsId]=useState()
+  const [gpsId, setGpsId] = useState();
   const sortData = ["ascend", "descend", "ascend"];
   const [deleteBtn, setDeleteBtn] = useState(false);
   const onChangeDelete = () => {
@@ -52,7 +52,7 @@ function myRecord() {
   const { me } = useSelector((state) => state.user);
 
   const createLink = (data) => {
-// console.log(data)
+    // console.log(data)
     setPropsId(data.gps_id);
   };
 
@@ -77,26 +77,23 @@ function myRecord() {
     }
   }, [propsId]);
 
-
-  const deleteModal=(data)=>{
+  const deleteModal = (data) => {
     // setGpsId(data)
-   var deleteform=confirm('진짜삭제하겠습니까?')
-   if(deleteform){
-     recordDelete(data)
-   }else{
-     console.log('다음에취소')
-   }
-   
+    var deleteform = confirm("진짜삭제하겠습니까?");
+    if (deleteform) {
+      recordDelete(data);
+    } else {
+      console.log("다음에취소");
+    }
 
     // setIsModalVisible(true)
-  }
-  const recordDelete=(gpsId)=>{
+  };
+  const recordDelete = (gpsId) => {
     dispatch({
-      type:DELETE_MYPOST_REQUEST,
-      data:gpsId
-    })
-}
-
+      type: DELETE_MYPOST_REQUEST,
+      data: gpsId,
+    });
+  };
 
   // const deleteModal = (data) => {
   //   setGpsId(data)
@@ -146,7 +143,9 @@ function myRecord() {
             </Row>
           </ScoreDiv>
           <Table
-            style={{ marginTop: "30px", height: "500px" }}
+            style={{
+              marginTop: "30px",
+            }}
             dataSource={me.posts}
             // pagination={{
             //   // defaultPageSize: 5,
@@ -226,17 +225,23 @@ function myRecord() {
               key={["id", "kind"]}
               render={(v, record) => (
                 <>
-                  {record.kind === "자유" && (
+                  {record.kind === "자유" ? (
                     <Button type="success" onClick={() => createLink(record)}>
                       경로만들기
                     </Button>
+                  ) : (
+                    <Button type="success">{record.kind}코스</Button>
                   )}
                   {/* {deleteBtn ? (
                     <Button type="danger" style={{ translate: "all 0.2" }}>
                       삭제
                     </Button>
                   ) : null} */}
-                   <Button type="danger" onClick={()=>deleteModal(record.id)} style={{ translate: "all 0.2" }}>
+                  <Button
+                    type="danger"
+                    onClick={() => deleteModal(record.id)}
+                    style={{ translate: "all 0.2" }}
+                  >
                     삭제
                   </Button>
                 </>
@@ -351,9 +356,7 @@ const CardDiv = styled.div`
     display: none !important;
   }
 
-  .ant-table-thead 
-  // th.ant-table-column-sort
-  {
+  .ant-table-thead {
     background: #fafafa;
   }
 

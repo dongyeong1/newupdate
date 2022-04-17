@@ -2,13 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Card } from "antd";
 import MissionCard from "./MissionCard";
+import { useSelector } from "react-redux";
 
 const MMR = () => {
+  const {me}=useSelector((state)=>state.user)
   return (
     <Container>
       <Card>
-        <h1>MMR : 2204</h1>
-        <p>어제로부터 스코어 변화</p>
+        <h1>score : {me.mmr}</h1>
+        {/* <p>어제로부터 스코어 변화</p>
         <div>
           <span style={{ color: "#fff" }}>+</span>
           <span>378</span>
@@ -16,7 +18,7 @@ const MMR = () => {
             className="img1"
             src="https://cdn-icons.flaticon.com/png/512/45/premium/45958.png?token=exp=1649617196~hmac=25852d553014e72e5ccfad33767dc23c"
           />
-        </div>
+        </div> */}
         <p>보유 뱃지</p>
         <div>
           <img src="https://cdn-icons-png.flaticon.com/512/473/473405.png" />

@@ -42,15 +42,21 @@ function createPath() {
     0,
     createMap.gpsData.gps.coordinates.length - 1,
   ]);
-  const [twoPolyline, setTwoPolyline] = useState([createMap.gpsData.gps.coordinates]);
+  const [twoPolyline, setTwoPolyline] = useState([
+    createMap.gpsData.gps.coordinates,
+  ]);
 
   const [leftPath, setLeftPath] = useState({
     lat: createMap.gpsData.gps.coordinates[0][1],
     lng: createMap.gpsData.gps.coordinates[0][0],
   });
   const [rightPath, setRightPath] = useState({
-    lat: createMap.gpsData.gps.coordinates[createMap.gpsData.gps.coordinates.length - 1][1],
-    lng: createMap.gpsData.gps.coordinates[createMap.gpsData.gps.coordinates.length - 1][0],
+    lat: createMap.gpsData.gps.coordinates[
+      createMap.gpsData.gps.coordinates.length - 1
+    ][1],
+    lng: createMap.gpsData.gps.coordinates[
+      createMap.gpsData.gps.coordinates.length - 1
+    ][0],
   });
 
   const dispatch = useDispatch();
@@ -66,9 +72,12 @@ function createPath() {
       lat: createMap.gpsData.gps.coordinates[number[0]][1],
       lng: createMap.gpsData.gps.coordinates[number[0]][0],
     });
-    setTwoPolyline([createMap.gpsData.gps.coordinates.slice(number[0], number[1])]);
+    setTwoPolyline([
+      createMap.gpsData.gps.coordinates.slice(number[0], number[1]),
+    ]);
     setCreateDistance(
-      createMap.gpsData.distance[number[1]] - createMap.gpsData.distance[number[0]]
+      createMap.gpsData.distance[number[1]] -
+        createMap.gpsData.distance[number[0]]
     );
     console.log("two", twoPolyline);
     console.log(number[0]);
@@ -79,31 +88,21 @@ function createPath() {
       lng: createMap.gpsData.gps.coordinates[number[1]][0],
     });
     setCreateDistance(
-      createMap.gpsData.distance[number[1]] - createMap.gpsData.distance[number[0]]
+      createMap.gpsData.distance[number[1]] -
+        createMap.gpsData.distance[number[0]]
     );
-    setTwoPolyline([createMap.gpsData.gps.coordinates.slice(number[0], number[1])]);
+    setTwoPolyline([
+      createMap.gpsData.gps.coordinates.slice(number[0], number[1]),
+    ]);
     console.log("three", twoPolyline);
     console.log(number[1]);
   }, [number[1]]);
 
-  // const mapContainerStyle = {
-  //   height: "500px",
-  //   width: "600px",
-  //   marginTop: 30,
-  // };
-
-  const mapContainerStyle = {
-    height: "500px",
-    width: "100%",
-    marginTop: 30,
-    borderRadius: 20,
-  };
-
   const options = {
-    strokeColor: "#348feb",
+    strokeColor: "#467ada",
     strokeOpacity: 0.8,
     strokeWeight: 5,
-    fillColor: "#FF0000",
+    fillColor: "#467ada",
     fillOpacity: 0.35,
     clickable: true,
     draggable: false,
@@ -121,10 +120,10 @@ function createPath() {
   };
 
   const options111 = {
-    strokeColor: "#d43b24",
+    strokeColor: "#fc0328",
     strokeOpacity: 0.8,
     strokeWeight: 5,
-    fillColor: "#FF0000",
+    fillColor: "#fc0328",
     fillOpacity: 0.35,
     clickable: true,
     draggable: false,
@@ -164,7 +163,8 @@ function createPath() {
       altitudes.push(createMap.gpsData.altitude[i].y);
     }
     totalDistance =
-      createMap.gpsData.distance[number[1]] - createMap.gpsData.distance[number[0]];
+      createMap.gpsData.distance[number[1]] -
+      createMap.gpsData.distance[number[0]];
     console.log(totalDistance, "al", altitudes);
 
     dispatch({
@@ -193,87 +193,17 @@ function createPath() {
     window.location.href = "/myRecord";
   };
 
+  const Calculation = (data) => {
+    return data / 1000;
+  };
+
   return (
-    // <div>
-    //   <Row>
-    //     <Col span={12}>
-    //       <h1 style={{ fontSize: 40 }}>경로만들기</h1>
-    //       <div>{createDistance}</div>
-    //       <div style={{ marginLeft: 40 }}>
-    //         <Slider
-    //           range
-    //           defaultValue={number}
-    //           max={createMap.gps.coordinates.length - 1}
-    //           onChange={change}
-    //         />
-    //       </div>
-
-    //       <LoadScript googleMapsApiKey="AIzaSyAYsO2CGL0YCjMoLk29eyitFC2PIJnJbYE">
-    //         <GoogleMap
-    //           id="marker-example"
-    //           mapContainerStyle={mapContainerStyle}
-    //           zoom={16}
-    //           center={{
-    //             lat: createMap.gps.coordinates[
-    //               createMap.gps.coordinates.length % 2
-    //             ][1],
-    //             lng: createMap.gps.coordinates[
-    //               createMap.gps.coordinates.length % 2
-    //             ][0],
-    //           }}
-    //         >
-    //           <Marker
-    //             position={leftPath}
-    //             icon={{
-    //               url: " http://maps.google.com/mapfiles/ms/icons/blue.png",
-    //             }}
-    //           ></Marker>
-    //           <Marker position={rightPath}></Marker>
-
-    //           <Polyline
-    //             options={options}
-    //             path={createMap.gps.coordinates.map((m) => ({
-    //               lat: m[1],
-    //               lng: m[0],
-    //             }))}
-    //           ></Polyline>
-    //           <Polyline
-    //             options={options111}
-    //             path={twoPolyline[0].map((m) => ({
-    //               lat: m[1],
-    //               lng: m[0],
-    //             }))}
-    //           ></Polyline>
-    //         </GoogleMap>
-    //       </LoadScript>
-    //     </Col>
-
-    //     <Col span={12}>
-    //       <Card style={{ marginTop: 150, borderRadius: 40, marginLeft: 90 }}>
-    //         <Input
-    //           style={{}}
-    //           placeholder="경로이름을 입력해주세요"
-    //           value={trackName}
-    //           onChange={onChangeTrackName}
-    //         />
-    //         <Input.TextArea
-    //           placeholder="경로내용을 입력해주세요"
-    //           value={trackDescription}
-    //           onChange={onChangeTrackDescription}
-    //         />
-
-    //         <Button onClick={pathStore}>경로만들기</Button>
-    //       </Card>
-    //     </Col>
-    //   </Row>
-    // </div>
-
-    <div>
-      <h1 style={{ fontSize: 40, marginLeft: 70 }}>경북대학교 한바퀴</h1>
-      <Row>
+    <Container>
+      {/* <h1 style={{ fontSize: 40, marginLeft: 70 }}>경북대학교 한바퀴</h1> */}
+      {/* <Row>
         <Col span={12}>
-          <LeftDiv>
-            {/* <div style={{ marginLeft: 40 }}>
+          <LeftDiv> */}
+      {/* <div style={{ marginLeft: 40 }}>
           <Slider
             range
             defaultValue={number}
@@ -281,62 +211,113 @@ function createPath() {
             onChange={change}
           />
         </div> */}
-            <LoadScript googleMapsApiKey="AIzaSyCyttJXmotwzGJhLd0hnVDQ0TxOG-Uonwg">
-              <GoogleMap
-                id="marker-example"
-                mapContainerStyle={mapContainerStyle}
-                zoom={15}
-                center={{
-                  lat: createMap.gpsData.gps.coordinates[
-                    createMap.gpsData.gps.coordinates.length % 2
-                  ][1],
-                  lng: createMap.gpsData.gps.coordinates[
-                    createMap.gpsData.gps.coordinates.length % 2
-                  ][0],
-                }}
-              >
-                <Marker
-                  position={leftPath}
-                  icon={{
-                    url: " http://maps.google.com/mapfiles/ms/icons/blue.png",
-                  }}
-                ></Marker>
-                <Marker position={rightPath}></Marker>
+      <div style={{ position: "relative" }}></div>
+      <LoadScript googleMapsApiKey="AIzaSyCyttJXmotwzGJhLd0hnVDQ0TxOG-Uonwg">
+        <GoogleMap
+          id="marker-example"
+          mapContainerStyle={mapContainerStyle}
+          zoom={16}
+          center={{
+            lat: createMap.gpsData.gps.coordinates[
+              createMap.gpsData.gps.coordinates.length % 2
+            ][1],
+            lng: createMap.gpsData.gps.coordinates[
+              createMap.gpsData.gps.coordinates.length % 2
+            ][0],
+          }}
+        >
+          <Marker
+            position={leftPath}
+            icon={{
+              url: " http://maps.google.com/mapfiles/ms/icons/blue.png",
+            }}
+          ></Marker>
+          <Marker position={rightPath}></Marker>
 
+          <Polyline
+            options={options}
+            path={createMap.gpsData.gps.coordinates.map((m) => ({
+              lat: m[1],
+              lng: m[0],
+            }))}
+          ></Polyline>
+          <Polyline
+            options={options111}
+            path={twoPolyline[0].map((m) => ({
+              lat: m[1],
+              lng: m[0],
+            }))}
+          ></Polyline>
+          {createMap.track
+            ? createMap.track.map((m, index) => (
                 <Polyline
-                  options={options}
-                  path={createMap.gpsData.gps.coordinates.map((m) => ({
-                    lat: m[1],
-                    lng: m[0],
+                  options={{
+                    strokeWeight: 5,
+                    clickable: true,
+                    visible: true,
+                    strokeColor: "#03fc6f",
+                    fillColor: "#03fc6f",
+                  }}
+                  path={m.gps.coordinates.map((p) => ({
+                    lat: p[1],
+                    lng: p[0],
                   }))}
                 ></Polyline>
-                <Polyline
-                  options={options111}
-                  path={twoPolyline[0].map((m) => ({
-                    lat: m[1],
-                    lng: m[0],
-                  }))}
-                ></Polyline>
-                {createMap.track?createMap.track.map((m, index) => (
-                  <Polyline
-                    
-                    options={{
-                      strokeWeight: 5,                      clickable: true,
-                      visible: true,
-                      strokeColor: "#008000",
-                      fillColor: "#008000",
-                    }}
-                    path={m.gps.coordinates.map((p) => ({
-                      lat: p[1],
-                      lng: p[0],
-                    }))}
-                  ></Polyline>
-                )):null}
-              </GoogleMap>
-            </LoadScript>
-            <SliderDiv
-            // style={{ marginLeft: 40 }}
-            >
+              ))
+            : null}
+        </GoogleMap>
+      </LoadScript>
+      {/* <SliderDiv>
+        <Slider
+          range
+          defaultValue={number}
+          max={createMap.gpsData.gps.coordinates.length - 1}
+          onChange={change}
+          style={{ marginTop: 40 }}
+          tipFormatter={null}
+        />
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <p>출발</p>
+          <p>도착</p>
+        </div>
+      </SliderDiv> */}
+      <RightDiv>
+        <div>
+          <TitleCard />
+          <Card
+            style={{
+              borderTopLeftRadius: 0,
+            }}
+            hoverable
+          >
+            <FormWrapper>
+              <div>
+                현재 측정중인 코스거리 :{" "}
+                {createDistance.toFixed(2)}km
+                {/* {Calculation(createDistance).toFixed(2)} km */}
+              </div>
+              <Form.Item>
+                <Input
+                  style={{ marginTop: 10, marginBottom: 20 }}
+                  placeholder="경로이름을 입력해주세요"
+                  value={trackName}
+                  onChange={onChangeTrackName}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Input.TextArea
+                  style={{ marginBottom: 20 }}
+                  placeholder="경로내용을 입력해주세요"
+                  value={trackDescription}
+                  onChange={onChangeTrackDescription}
+                />
+              </Form.Item>
+
+              <Button type="primary" onClick={pathStore}>
+                경로만들기
+              </Button>
+            </FormWrapper>
+            <SliderDiv>
               <Slider
                 range
                 defaultValue={number}
@@ -345,85 +326,16 @@ function createPath() {
                 style={{ marginTop: 40 }}
                 tipFormatter={null}
               />
-              {/* tipFormatter, style 추가 */}
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <p>출발</p>
                 <p>도착</p>
               </div>
             </SliderDiv>
-          </LeftDiv>
-        </Col>
-        <Col span={12}>
-          <RightDiv>
-            <div style={{ width: "65%" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  marginBottom: 20,
-                }}
-              >
-                <img src="https://cdn-icons-png.flaticon.com/512/6933/6933236.png" />
-                <h3 style={{ fontWeight: "bold" }}>도움말</h3>
-              </div>
-              <Row gutter={[16, 16]}>
-                <Col span={12} style={{ borderRight: "grey" }}>
-                  <p>출발점</p>
-                  <img src="http://maps.google.com/mapfiles/ms/icons/blue.png" />
-                </Col>
-                <Col span={12}>
-                  <p>도착점</p>
-                  <div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/2150/2150519.png" />
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <p>기존 맵의 라인</p>
-                  <img src="https://cdn-icons-png.flaticon.com/512/399/399425.png" />
-                </Col>
-                <Col span={12}>
-                  <p>내가 만드는 맵의 라인</p>
-                  <img src="https://cdn-icons-png.flaticon.com/512/143/143505.png" />
-                </Col>
-              </Row>
-            </div>
-            <div style={{ marginTop: 25 }}>
-              <TitleCard />
-              <Card
-                style={{
-                  borderTopLeftRadius: 0,
-                }}
-                // hoverable
-              >
-                <FormWrapper>
-                  <div>현재 측정중인 코스거리 : {createDistance}</div>
-                  <Form.Item>
-                    <Input
-                      style={{ marginTop: 10, marginBottom: 20 }}
-                      placeholder="경로이름을 입력해주세요"
-                      value={trackName}
-                      onChange={onChangeTrackName}
-                    />
-                  </Form.Item>
-                  <Form.Item>
-                    <Input.TextArea
-                      style={{ marginBottom: 20 }}
-                      placeholder="경로내용을 입력해주세요"
-                      value={trackDescription}
-                      onChange={onChangeTrackDescription}
-                    />
-                  </Form.Item>
-
-                  <Button type="primary" onClick={pathStore}>
-                    경로만들기
-                  </Button>
-                </FormWrapper>
-              </Card>
-            </div>
-          </RightDiv>
-        </Col>
-      </Row>
-    </div>
+          </Card>
+        </div>
+      </RightDiv>
+     
+    </Container>
   );
 }
 
@@ -458,8 +370,18 @@ export const getStaticProps = wrapper.getStaticProps(async (context) => {
 
 export default createPath;
 
-const LeftDiv = styled.div`
-  margin-left: 70px;
+const mapContainerStyle = {
+  height: "700px",
+  width: "100%",
+  // marginTop: 30,
+  borderRadius: 20,
+  position: "relative",
+};
+
+const Container = styled.div`
+  padding: 3% 5% 0 5%;
+  width: 100%;
+  // position: relative;
 `;
 
 const FormWrapper = styled(Form)`
@@ -469,19 +391,21 @@ const FormWrapper = styled(Form)`
 `;
 
 const SliderDiv = styled.div`
+  width: 50%;
+
   .ant-slider-rail {
     background: #e1e1e1;
   }
 
   .ant-slider-track {
-    background: #66b5ff;
+    background: #467ada;
   }
 `;
 
 const TitleCard = styled(Card)`
   width: 100% !important;
   height: 10px;
-  background: #1890ff;
+  background: #467ada;
   border-top-right-radius: 9px !important;
   border-top-right-radius: 9px !important;
   border-bottom-right-radius: 0 !important;
@@ -491,19 +415,28 @@ const TitleCard = styled(Card)`
 `;
 
 const RightDiv = styled.div`
-  width: 60%;
-  position: relative;
-  top: 31px;
-  margin-left: 90px;
-
+  width: 30%;
+  position: fixed;
+  right: 5%;
+  top: 16%;
+  // margin-left: 90px;
   .ant-card {
     width: 100%;
     border-radius: 7px;
-    box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%);
+  }
+
+  .ant-card-hoverable:hover {
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 30%) !important;
+    cursor: default !important;
   }
 
   img {
     width: 32px;
     height: 32px;
+  }
+
+  .ant-btn {
+    background: #467ada;
+    border: 1px solid #467ada;
   }
 `;

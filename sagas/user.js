@@ -3,7 +3,7 @@ import { all,call,fork,put,takeLatest, take} from 'redux-saga/effects'
 import {LOGIN_FAIL, LOGIN_REQUEST,LOGIN_SUCCESS,LOGOUT_REQUEST, 
     LOGOUT_SUCCESS,LOGOUT_FAIL, SIGNUP_REQUEST,SIGNUP_SUCCESS,SIGNUP_FAIL,
     FOLLOWING_SUCCESS,FOLLOWING_REQUEST,FOLLOWING_FAIL,UNFOLLOWING_REQUEST,
-    UNFOLLOWING_SUCCESS,UNFOLLOWING_FAIL, LOAD_LOGIN_REQUEST, LOAD_LOGIN_SUCCESS, LOAD_LOGIN_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE, USER_SEARCH_REQUEST, USER_SEARCH_SUCCESS, USER_SEARCH_FAILURE, WEEKRECORD_REQUEST, WEEKRECORD_SUCCESS, WEEKRECORD_FAILURE, DELETE_MYPOST_REQUEST,DELETE_MYPOST_SUCCESS,DELETE_MYPOST_FAILURE, USER_RATE_REQUEST,USER_RATE_FAILURE,USER_RATE_SUCCESS,WEEKRECORD_BIKE_SUCCESS,WEEKRECORD_BIKE_REQUEST,WEEKRECORD_BIKE_FAILURE, WEATHER_REQUEST, WEATHER_SUCCESS, WEATHER_FAILURE} from '../reducers/user'
+    UNFOLLOWING_SUCCESS,PROGRESS_FAILURE,UNFOLLOWING_FAIL, LOAD_LOGIN_REQUEST, LOAD_LOGIN_SUCCESS, LOAD_LOGIN_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE, USER_SEARCH_REQUEST, USER_SEARCH_SUCCESS, USER_SEARCH_FAILURE, WEEKRECORD_REQUEST, WEEKRECORD_SUCCESS, WEEKRECORD_FAILURE, DELETE_MYPOST_REQUEST,DELETE_MYPOST_SUCCESS,DELETE_MYPOST_FAILURE, USER_RATE_REQUEST,USER_RATE_FAILURE,USER_RATE_SUCCESS,WEEKRECORD_BIKE_SUCCESS,WEEKRECORD_BIKE_REQUEST,WEEKRECORD_BIKE_FAILURE, WEATHER_REQUEST, WEATHER_SUCCESS, WEATHER_FAILURE, GOAL_REQUEST, GOAL_SUCCESS, GOAL_FAILURE, ALL_GOAL_REQUEST, ALL_GOAL_SUCCESS, ALL_GOAL_FAILURE, PROGRESS_SUCCESS, PROGRESS_REQUEST, DELETE_GOAL_REQUEST, DELETE_GOAL_SUCCESS, DELETE_GOAL_FAILURE} from '../reducers/user'
 import axios from 'axios'
 import cookie from 'react-cookies'
 import { withCookies, Cookies } from 'react-cookie';
@@ -534,6 +534,177 @@ function* Weather(action){
 }
                     
                     
+const GoalAPI=async(datas)=>{
+
+
+    try{
+        const res= await fetch('https://2yubi.shop/api/goal', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                title:datas.title,
+                goal:parseInt(datas.purpose),
+                firstDate:datas.start,
+                lastDate:datas.end,
+                event:datas.event
+        }),
+          });
+          const data= await res.json()
+       
+     
+       console.log('asdsdgsdcvxcv',data)
+          return data
+
+    }catch(err){
+        console.log(err)
+    }
+   
+
+}
+
+
+
+function* Goal(action){
+    try{
+        console.log('action',action.data)
+        const result = yield call(GoalAPI,action.data)
+        yield put({
+            type:GOAL_SUCCESS,
+            data:result
+        })
+
+    }catch(err){
+        yield put({
+            type:GOAL_FAILURE,
+            error:'aa',
+        })
+
+    }
+}
+               
+
+const AllGoalAPI=async()=>{
+
+
+    const res=await axios.get('https://2yubi.shop/api/goal/all')
+         
+    const data= await res.data          
+     return data
+
+
+    
+    
+}
+
+
+
+function* AllGoal(action){
+    try{
+        console.log('action',action.data)
+        const result = yield call(AllGoalAPI)
+        yield put({
+            type:ALL_GOAL_SUCCESS,
+            data:result
+        })
+
+    }catch(err){
+        yield put({
+            type:ALL_GOAL_FAILURE,
+            error:'aa',
+        })
+
+    }
+}
+
+const progressAPI=async()=>{
+
+
+    const res=await axios.get('https://2yubi.shop/api/goal/check')
+         
+    const data= await res.data          
+     return data
+
+
+
+    
+}
+
+
+
+function* progress(action){
+    try{
+        console.log('action',action.data)
+        const result = yield call(progressAPI)
+        yield put({
+            type:PROGRESS_SUCCESS,
+            data:result
+        })
+
+    }catch(err){
+        yield put({
+            type:PROGRESS_FAILURE,
+            error:'aa',
+        })
+
+    }
+}
+                    
+                    
+
+
+
+const deleteGoalAPI=async(datas)=>{
+
+
+    try{
+        const res= await fetch(`https://2yubi.shop/api/goal/delete/${datas}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            credentials: "include",
+            
+          });
+          const data= await res.json()
+       
+     
+       console.log('asdsdgsdcvxcv',data)
+          return data
+
+    }catch(err){
+        console.log(err)
+    }
+
+
+
+}
+
+
+
+function* deleteGoal(action){
+    try{
+        console.log('action',action.data)
+        const result = yield call(deleteGoalAPI,action.data)
+        yield put({
+            type:DELETE_GOAL_SUCCESS,
+            data:result
+        })
+
+    }catch(err){
+        yield put({
+            type:DELETE_GOAL_FAILURE,
+            error:'aa',
+        })
+
+    }
+}
+                           
+
 
 
     
@@ -582,6 +753,23 @@ function* watchWeekBikeRecord(){
 function* watchWeather(){
     yield takeLatest(WEATHER_REQUEST,Weather)
 }
+function* watchGoal(){
+    yield takeLatest(GOAL_REQUEST,Goal)
+}
+
+function* watchAllGoal(){
+    yield takeLatest(ALL_GOAL_REQUEST,AllGoal)
+}
+
+function* watchProgress(){
+    yield takeLatest(PROGRESS_REQUEST,progress)
+}
+function* watchDeleteGoal(){
+    yield takeLatest(DELETE_GOAL_REQUEST,deleteGoal)
+}
+
+
+
 
 
 
@@ -602,6 +790,10 @@ export default function* rootSaga(){
         fork(watchUserRate),
         fork(watchWeekBikeRecord),
         fork(watchWeather),
+        fork(watchGoal),
+        fork(watchAllGoal),
+        fork(watchProgress),
+        fork(watchDeleteGoal)
 
     ])
 

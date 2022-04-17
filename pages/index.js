@@ -9,6 +9,7 @@ import {
   Modal,
   Empty,
   Statistic,
+  Progress
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "../component/LoginForm";
@@ -17,7 +18,7 @@ import axios from "axios";
 import wrapper from "../store/configureStore";
 import PostCard from "../component/PostCard";
 import MyNote from "../component/MyNote";
-import { LOAD_MY_INFO_REQUEST , USER_RATE_REQUEST, WEEKRECORD_REQUEST,WEEKRECORD_BIKE_REQUEST, WEATHER_REQUEST} from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST , USER_RATE_REQUEST, WEEKRECORD_REQUEST,WEEKRECORD_BIKE_REQUEST, WEATHER_REQUEST, PROGRESS_REQUEST} from "../reducers/user";
 import { LOAD_MORE_POST_REQUEST, LOAD_POSTS_REQUEST } from "../reducers/post";
 
 import { END } from "redux-saga";
@@ -34,10 +35,11 @@ import Pie from "../component/Pie";
 import Target from "../component/Target";
 import MMR from "../component/MMR";
 import { ArrowUpOutlined } from "@ant-design/icons";
+import PurposePie from "../component/purposePie";
 
 function index() {
 
-  const {weekRecord,userRate,weekBikeRecord}=useSelector((state)=>(state.user))
+  const {weekRecord,userRate,weekBikeRecord,purposeProgress}=useSelector((state)=>(state.user))
 
 
   useEffect(() => {
@@ -113,7 +115,17 @@ function index() {
         </TopDiv>
         <BottomDiv>
           <Pie userRate={userRate} />
-          <MyNoteNote />
+          {/* <MyNoteNote /> */}
+          {/* <PurposePie purposeProgress={purposeProgress}></PurposePie> */}
+          <Card>
+            *러닝목표율
+          {purposeProgress.run[0]?<div><Progress type="circle" percent={purposeProgress.run[0].progress}></Progress><div>목표:{purposeProgress.run[0].goalDistance}km</div><div>시작일:{purposeProgress.run[0].firstDate}</div><div>종료일:{purposeProgress.run[0].lastDate}</div></div>:<div>러닝등록된목표가없습니다.</div>}
+
+          *자전거목표율
+          {purposeProgress.bike[0]?<div><Progress type="circle" percent={purposeProgress.bike[0].progress}></Progress><div>목표:{purposeProgress.bike[0].goalDistance}km</div><div>시작일:{purposeProgress.bike[0].firstDate}</div><div>종료일:{purposeProgress.bike[0].lastDate}</div></div>:<div>자전거등록된목표가없습니다.</div>}
+
+          </Card>
+          
           <Target />
         </BottomDiv>
       </div>
@@ -147,6 +159,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
     })
     context.store.dispatch({
       type:WEATHER_REQUEST
+    })
+    context.store.dispatch({
+      type:PROGRESS_REQUEST
     })
     
     

@@ -15,10 +15,10 @@
     "static/development/_middlewareManifest.js"
   ],
   "pages": {
-    "/": [
+    "/Create/[id]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/index.js"
+      "static/chunks/pages/Create/[id].js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
@@ -30,15 +30,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/myRecord": [
+    "/musclePurpose": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/myRecord.js"
+      "static/chunks/pages/musclePurpose.js"
     ],
     "/polylineTest": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/polylineTest.js"
+    ],
+    "/userSearch": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/userSearch.js"
     ]
   },
   "ampFirstPages": []

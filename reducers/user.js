@@ -4,8 +4,10 @@ import Router from 'next/router'
 
 export const initialState={
   weathers:null,
-    
-  
+  goalpurpose:null,
+    allPurpose:null,
+    purposeProgress:null,
+
     me:null,
     searchUsers:[],
     weekRecord:null,
@@ -50,6 +52,23 @@ export const initialState={
 
 
 }
+
+
+export const PROGRESS_REQUEST='PROGRESS_REQUEST'
+export const PROGRESS_SUCCESS='PROGRESS_SUCCESS'
+export const PROGRESS_FAILURE='PROGRESS_FAILURE'
+
+export const ALL_GOAL_REQUEST='ALL_GOAL_REQUEST'
+export const ALL_GOAL_SUCCESS='ALL_GOAL_SUCCESS'
+export const ALL_GOAL_FAILURE='ALL_GOAL_FAILURE'
+
+export const GOAL_REQUEST='GOAL_REQUEST'
+export const GOAL_SUCCESS='GOAL_SUCCESS'
+export const GOAL_FAILURE='GOAL_FAILURE'
+
+export const DELETE_GOAL_REQUEST='DELETE_GOAL_REQUEST'
+export const DELETE_GOAL_SUCCESS='DELETE_GOAL_SUCCESS'
+export const DELETE_GOAL_FAILURE='DELETE_GOAL_FAILURE'
 
 export const WEATHER_REQUEST='WEATHER_REQUEST'
 export const WEATHER_SUCCESS='WEATHER_SUCCESS'
@@ -112,6 +131,60 @@ export const DELETE_MYPOST_FAILURE='DELETE_MYPOST_FAILURE'
 const reducer=(state=initialState,action)=>{
     return produce(state,(draft)=>{
         switch(action.type){
+
+
+          case DELETE_GOAL_REQUEST:
+            break;
+          case DELETE_GOAL_SUCCESS:
+            // draft.purposeProgress=action.data
+            // if (action.data.title){
+            //   draft.goalpurpose=action.data
+
+            // }
+            break;
+          case DELETE_GOAL_FAILURE:
+            break;
+
+
+
+        case PROGRESS_REQUEST:
+            break;
+          case PROGRESS_SUCCESS:
+            draft.purposeProgress=action.data
+            // if(action.data.title){
+            //   draft.goalpurpose=action.data
+
+            // }
+            break;
+          case PROGRESS_FAILURE:
+            break;
+
+
+
+          case ALL_GOAL_REQUEST:
+            break;
+          case ALL_GOAL_SUCCESS:
+            draft.allPurpose=action.data
+            // if(action.data.title){
+            //   draft.goalpurpose=action.data
+
+            // }
+            break;
+          case ALL_GOAL_FAILURE:
+            break;
+
+          case GOAL_REQUEST:
+            break;
+          case GOAL_SUCCESS:
+            if(action.data.title){
+              draft.goalpurpose=action.data
+
+            }
+            // draft.weathers=action.data
+            break;
+          case GOAL_FAILURE:
+            break;
+
 
             case WEATHER_REQUEST:
               break;

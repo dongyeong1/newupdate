@@ -9,7 +9,11 @@ import {
 } from "@react-google-maps/api";
 import { InfoWindow } from "@react-google-maps/api";
 import Router from "next/router";
-import { LOAD_MAP_REQUEST, LOAD_TRACK_MYRANK_REQUEST, LOAD_TRACK_RANK_REQUEST } from "../../reducers/map";
+import {
+  LOAD_MAP_REQUEST,
+  LOAD_TRACK_MYRANK_REQUEST,
+  LOAD_TRACK_RANK_REQUEST,
+} from "../../reducers/map";
 import {
   MOVING_MAP_REQUEST,
   BIKE_MAP_REQUEST,
@@ -29,12 +33,12 @@ var lat = 1;
 var lng = 2;
 
 function selectMap({}) {
-  useEffect(()=>{
-    console.log('mememememe',me)
-  },[])
+  useEffect(() => {
+    console.log("mememememe", me);
+  }, []);
   const { myLocation } = useSelector((state) => state.map);
 
-  const {me}=useSelector((state)=>state.user)
+  const { me } = useSelector((state) => state.user);
   const [geom, setGeom] = useState();
   const { Search } = Input;
 
@@ -70,16 +74,10 @@ function selectMap({}) {
 
   const dispatch = useDispatch();
 
-  // const mapContainerStyle = {
-  // marginTop:60,
-  // height: "720px",
-  // width: "1000px"
-  // };
   const mapContainerStyle = {
     // Google Map 스타일
     width: "88%",
     height: "85vh",
-    // margin: "0 5%",
     borderRadius: "15px",
     position: "relative",
     left: "8%",
@@ -92,7 +90,7 @@ function selectMap({}) {
 
   useEffect(() => {
     getLocation();
-    console.log('loqwwqwqwqsaxcxc')
+    console.log("loqwwqwqwqsaxcxc");
     if (mapref) {
       dispatch({
         type: LOAD_MY_LOCATION_REQUEST,
@@ -237,12 +235,12 @@ function selectMap({}) {
     //   type:LOAD_TRACK_MYRANK_REQUEST,
     //   data: propsId,
     // })
-    window.location.href="/Route/"+propsId
+    window.location.href = "/Route/" + propsId;
     // dispatch({
     //   type: LOAD_MAP_REQUEST,
     //   data: propsId,
     // });
- 
+
     // dispatch({
     //   type:LOAD_TRACK_RANK_REQUEST,
     //   data:propsId,
@@ -329,36 +327,64 @@ function selectMap({}) {
                   size="large"
                 />
                 <Buttons>
-                  <Button className="btn1" onClick={bikeSelectMap}>
+                  {mapState === "B" ? (
+                    <>
+                      <Button
+                        className="btn1"
+                        onClick={bikeSelectMap}
+                        style={{ background: "#1890ff", color: "#fff" }}
+                      >
+                        자전거
+                      </Button>
+                      <Button className="btn2" onClick={runningSelectMap}>
+                        달리기
+                      </Button>
+                    </>
+                  ) : mapState === "R" ? (
+                    <>
+                      <Button className="btn1" onClick={bikeSelectMap}>
+                        자전거
+                      </Button>
+                      <Button
+                        className="btn2"
+                        onClick={runningSelectMap}
+                        style={{ background: "#1890ff", color: "#fff" }}
+                      >
+                        달리기
+                      </Button>
+                    </>
+                  ) : null}
+                  {/* <Button className="btn1" onClick={bikeSelectMap}>
                     자전거
                   </Button>
                   <Button className="btn2" onClick={runningSelectMap}>
                     달리기
-                  </Button>
+                  </Button> */}
                 </Buttons>
               </div>
               {/* <RowDiv gutter={[0, 16]}> */}
-              {searchMap.map((p, index) => (
-                // <Col span={24}>
-                <SearchList
-                  setInfoPosition={setInfoPosition}
-                  setPropsId={setPropsId}
-                  setTarget={setTarget}
-                  index={index}
-                  setStrokeWeight={setStrokeWeight}
-                  list={p}
-                  key={p.id}
-                ></SearchList>
-                // </Col>
-              ))}
-              {/* </RowDiv> */}
-              <Page
-                defaultCurrent={1}
-                defaultPageSize={3}
-                // total={searchMap.lenth}
-                total={10}
-                // onChange={onChangePage}
-              />
+              <div
+                className="scroll"
+                style={{
+                  // overflowY: "scroll",
+                  // overflow: "hidden",
+                  height: 600,
+                  overflowY: "scroll",
+                  // msOverflowStyle: "none",
+                }}
+              >
+                {searchMap.map((p, index) => (
+                  <SearchList
+                    setInfoPosition={setInfoPosition}
+                    setPropsId={setPropsId}
+                    setTarget={setTarget}
+                    index={index}
+                    setStrokeWeight={setStrokeWeight}
+                    list={p}
+                    key={p.id}
+                  ></SearchList>
+                ))}
+              </div>
             </LeftDiv>
           </Col>
 
@@ -367,7 +393,7 @@ function selectMap({}) {
               <GoogleMap
                 id="marker-example"
                 mapContainerStyle={mapContainerStyle}
-                zoom={16}
+                zoom={13}
                 center={geom}
                 onLoad={handleOnLoad}
                 onDragEnd={handleCenterChanged}
@@ -381,8 +407,8 @@ function selectMap({}) {
                         position={{
                           // lat: p.start_latlng[1],
                           // lng: p.start_latlng[0],
-                          lat:p.gps.coordinates[0][1],
-                          lng:p.gps.coordinates[0][0],
+                          lat: p.gps.coordinates[0][1],
+                          lng: p.gps.coordinates[0][0],
                         }}
                         clusterer={clusterer}
                         icon={{
@@ -415,9 +441,11 @@ function selectMap({}) {
                 {target && (
                   <InfoWindow position={infoPosition} onCloseClick={closeClick}>
                     <div style={divStyle}>
-                      <h1>동영</h1>
-                     
-                      <button ><a href={"Route/"+propsId}>상세보기</a></button>
+                      <h1>코스상세보기</h1>
+
+                      <button>
+                        <a href={"Route/" + propsId}>상세보기</a>
+                      </button>
                     </div>
                   </InfoWindow>
                 )}
@@ -451,127 +479,11 @@ export const getStaticProps = wrapper.getStaticProps(async (context) => {
   await context.store.sagaTask.toPromise();
 });
 
-// const Container = styled.div`
-//   // 전체 div
-//   width: 100%;
-//   // height: 100%;
-
-//   .ant-input {
-//     border-radius: 15px;
-//     border-radius: 1px solid #1890ff;
-//   }
-
-//   .ant-input-group-wrapper {
-//     margin-bottom: 20px;
-//   }
-
-//   .ant-input-group {
-//     width: 90%;
-//     width: 100%;
-//     // margin: 0 auto;
-//   }
-
-//   .ant-input-search {
-//     border-radius: 9px !important;
-//     // position: relative;
-//     // right: 15px;
-//     // z-index: 1;
-//   }
-
-//   .ant-input-search-button {
-//     // border-radius: 55% !important;
-//     // border-top-right-radius: 9px !important;
-//     // border-bottom-right-radius: 9px !important;
-//   }
-
-//   .ant-card {
-//     width: 100%;
-//     border-radius: 9px;
-//     box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%);
-//     margin: 0;
-//   }
-// `;
-
-// const mapContainerStyle = {
-//   // Google Map 스타일
-//   width: "100%",
-//   height: "80vh",
-//   borderRadius: "15px",
-//   padding: "0 30px",
-// };
-
-// export const CardDiv = styled(Card)`
-//   width: 100%;
-
-//   border-radius: 15px;
-//   box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%);
-
-//   .ant-card-body {
-//     padding: 10px;
-//   }
-// `;
-
-// // const RightDiv = styled.div``;
-
-// const LeftDiv = styled.div`
-//   display: inline-block;
-//   position: relative;
-//   width: 100%;
-//   height: 100%;
-//   padding: 0 5%;
-// `;
-
-// export const Title = styled.p`
-//   font-size: 30px;
-//   font-weight: bold;
-//   margin: 20px auto;
-//   margin-top: 0;
-// `;
-
-// const Page = styled(Pagination)`
-//   position: absolute;
-//   left: 34%;
-//   bottom: 1%;
-//   margin-top: 32px;
-//   text-align: center;
-// `;
-
-// const Buttons = styled.div`
-//   display: inline-block;
-//   width: 90%;
-//   width: 100%;
-//   margin-bottom: 20px;
-
-//   Button {
-//     height: 33px;
-//     border-radius: 15px;
-//     margin-right: 10px;
-//   }
-
-//   Button:hover {
-//     background: #1683e8;
-//     border-color: #1683e8;
-//     color: #fff;
-//   }
-
-//   Button:focus {
-//     background: #1683e8;
-//     color: #fff;
-//   }
-// `;
-
-// const RowDiv = styled(Row)`
-//   display: inline-block;
-//   width: 100%;
-//   height: 75%;
-//   // border: 1px solid grey;
-//   padding-bottom: 30px;
-// `;
-
 const Container = styled.div`
   // 전체 div
   width: 100%;
-  // height: 100%;
+  height: 100%;
+  // padding-top: 1%;
 
   .ant-input {
     border-radius: 15px;
@@ -607,6 +519,11 @@ const Container = styled.div`
     box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%);
     margin: 0;
   }
+
+  .ant-card-hoverable:hover {
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 30%) !important;
+    cursor: default !important;
+  }
 `;
 
 const mapContainerStyle = {
@@ -636,6 +553,15 @@ const LeftDiv = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 5%;
+  // overflow-y: scroll;
+
+  .scroll {
+    -ms-overflow-style: none;
+  }
+
+  .scroll::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Title = styled.p`

@@ -6,7 +6,11 @@ import Link from "next/link";
 //   SearchWrapper,
 //   IconList,
 // } from "../../styles/styles";
+import { LOGOUT_REQUEST, SIGNUP_REQUEST } from "../../reducers/user";
+
 import { Avatar, Input, Layout, Button } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+
 const { Header, Sider } = Layout;
 import {
   CommentOutlined,
@@ -18,6 +22,14 @@ import styled from "styled-components";
 const { Search } = Input;
 
 const header = () => {
+  
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch({
+      type: LOGOUT_REQUEST,
+    });
+  };
+
   return (
     <HeaderWrapper>
       {/* <SearchWrapper>
@@ -40,7 +52,7 @@ const header = () => {
             </a>
           </li>
         </ul> */}
-        <Button type="primary">LogOut</Button>
+        <Button type="primary" onClick={()=>logout()}>LogOut</Button>
         <AvatarDiv>
           <a>
             <Avatar src="kurumi.jpg" size={40}></Avatar>

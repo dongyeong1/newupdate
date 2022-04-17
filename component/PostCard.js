@@ -40,7 +40,7 @@ import moment from "moment";
 import ImageCarousel from "./imageCarousel";
 
 // import ImageCarousel from "./imageCarousel ";
-// 
+//
 const dummyComments = [
   {
     User: {
@@ -82,17 +82,10 @@ const PostCard = ({ post }) => {
     return date.format("MM월DD일");
   };
 
-  const ImageFilter = (post) => {
-    if (post.image === true) {
-      return post.image[0].url;
-    }
-    if (post.map_image === true) {
-      return post.map_image[0].url;
-    }
-  };
-
+  
   return (
     <Container>
+      <span className="title">Post</span>
       <Card
         // cover={post.Images[0] && <PostImages images={post.Images} />}
         style={{
@@ -103,22 +96,31 @@ const PostCard = ({ post }) => {
           marginBottom: "20px !important",
           // marginLeft: 100,
         }}
+        hoverable
       >
         <Row gutter={[16, 16]}>
-          {post.image && (
-            <Col span={24}>
+          {/* {post.image && (
+            <Col span={12}>
               <ImageCarousel post={post} />
             </Col>
-          )}
+          )} */}
           <Col span={12}>
+            <ImageCarousel post={post} />
+          </Col>
+          {/* <Col span={12}>
             <img
               className="imgimg"
               width={300}
               height={330}
               alt="지도사진"
-              src={post.map_image[0] ? post.map_image[0].url : null}
+              src={
+                post.map_image[0]
+                  ? post.map_image[0].url
+                  : // : "https://cdn-icons.flaticon.com/png/512/5540/premium/5540531.png?token=exp=1650162938~hmac=72129843982ff4f18bebfb639ee9623d"
+                    "https://t4.ftcdn.net/jpg/02/51/95/53/240_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg"
+              }
             />
-          </Col>
+          </Col> */}
           <Col span={12}>
             <RightCol>
               <Card.Meta
@@ -254,7 +256,12 @@ const Container = styled.div`
   margin-bottom: 40px;
 
   .ant-card {
-    // padding: 0 20px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%) !important;
+  }
+
+  .ant-card-hoverable:hover {
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 30%) !important;
+    cursor: default !important;
   }
 
   .ant-card-body {
@@ -284,6 +291,23 @@ const Container = styled.div`
 
   .ant-btn {
     width: 100% !important;
+  }
+
+  .title {
+    display: inline-block;
+    width: 100%;
+    max-width: 150px;
+    height: 35px;
+    line-height: 30px;
+    text-align: left;
+    background: #467ada;
+    color: #fff;
+    padding-left: 15px;
+    font-size: 26px;
+    font-weight: bold;
+    clip-path: polygon(65% 0%, 100% 100%, 100% 100%, 0 100%, 0 0);
+    position: relative;
+    right: 40%;
   }
 `;
 
@@ -330,7 +354,7 @@ const RightCol = styled.div`
 
   .card1 {
     position: relative;
-    top: 10px;
+    top: 4px;
   }
 
   // .ant-card-description {
